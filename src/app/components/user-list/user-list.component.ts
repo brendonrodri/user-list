@@ -11,10 +11,8 @@ export class UserListComponent {
   @Output() $userSelected: EventEmitter<IUser> = new EventEmitter<IUser>();
   public userList: IUser[] = UsersList;
   public displayedColumns: string[] = ['name', 'date', 'status']
-  public rowClicked: boolean = false;
 
   public onUserSelected(user: IUser): void{
     this.$userSelected.emit(user);
-    // this.rowClicked = true;
   }
 }
