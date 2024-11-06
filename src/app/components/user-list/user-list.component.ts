@@ -10,12 +10,16 @@ import { IUser } from 'src/app/interfaces/user/user.interface';
 })
 export class UserListComponent {
   @Input({required: true}) userList: IUser[] = [];
-  @Input({required: true}) filterOptions: IFilterOptions = {} as IFilterOptions;
   @Output() $userSelected: EventEmitter<IUser> = new EventEmitter<IUser>();
 
   public displayedColumns: string[] = ['name', 'date', 'status'];
+  public clicked: boolean = false;
 
   public onUserSelected(user: IUser): void{
     this.$userSelected.emit(user);
+    this.onClicked()
+  }
+  public onClicked(){
+    this.clicked = true;
   }
 }

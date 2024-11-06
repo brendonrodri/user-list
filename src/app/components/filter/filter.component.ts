@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { IActiveOptions } from 'src/app/interfaces/filter/active-otions.interface';
+import { IStatusOption } from 'src/app/interfaces/filter/active-otions.interface';
 import { IFilterOptions } from 'src/app/interfaces/filter/filter-options.interface';
 
 @Component({
@@ -10,15 +9,19 @@ import { IFilterOptions } from 'src/app/interfaces/filter/filter-options.interfa
 })
 
 export class FilterComponent {
-  @Output() $filterOptionsEmitter: EventEmitter<IFilterOptions> = new EventEmitter<IFilterOptions>;
-  public filterOptions: IFilterOptions = {} as IFilterOptions;
-  public activeOptions: IActiveOptions[] = [
-    {value: true, viewValue: 'Ativo'},
-    {value: false, viewValue: 'Inativo'},
+  @Output('$onFilter') $onFilterEmitt: EventEmitter<IFilterOptions> = new EventEmitter<IFilterOptions>;
+  public filterOptions: IFilterOptions = {
+    name: undefined,
+    startDate: undefined,
+    endDate: undefined,
+    status: undefined
+  };
+  public statusOptions: IStatusOption[] = [
+    {value: true, description: 'Ativo'},
+    {value: false, description: 'Inativo'},
   ];
-  public selectControl = new FormControl(Validators.required);
 
   getFilterOptions(){
-    this.$filterOptionsEmitter.emit(this.filterOptions);
+    this.$onFilterEmitt.emit(this.filterOptions);
   }
 }

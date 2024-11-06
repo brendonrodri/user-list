@@ -5,8 +5,12 @@
 
   &__item{
     cursor: pointer;
+
   }
-  &__clicked{
-    background-color: beige;
+  &__hover{
+    &:hover{
+      background-color: #b1d1f3;
+      transition: all 0.2s ease-in;
+    }
   }
 }

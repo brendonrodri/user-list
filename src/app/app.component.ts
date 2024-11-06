@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IUser } from './interfaces/user/user.interface';
 import { UsersList } from './data/users-list';
 import { IFilterOptions } from './interfaces/filter/filter-options.interface';
+import { isWithinInterval } from 'date-fns';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +10,15 @@ import { IFilterOptions } from './interfaces/filter/filter-options.interface';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  public userList: IUser[] = [];
+  public usersList: IUser[] = [];
+  public userListFiltered: IUser[] = [];
   public userSelected: IUser = {} as IUser;
   public showUserDetails: boolean = false;
-  protected filterOptions: IFilterOptions = {} as IFilterOptions;
 
   ngOnInit(): void {
     setTimeout(()=>{
-      this.userList = UsersList;
+      this.usersList = UsersList;
+      this.userListFiltered = this.usersList;
     }, 1)
   }
 
@@ -25,33 +27,50 @@ export class AppComponent implements OnInit{
     this.showUserDetails = true;
   }
 
-  onFilterOptionsSelected(event: IFilterOptions) {
-    this.filterOptions = event;
-    this.filterUser(event);
+  onFilter(filterOptions: IFilterOptions) {
+    this.userListFiltered = this.filterUserList(filterOptions, this.usersList);
+  }
+
+  private filterUserList(filterOptions: IFilterOptions, usersList: IUser[]): IUser[]{
+    let filteredList: IUser[] = [];
+    // //first list is filtered by name
+    filteredList = this.filterUserListByName(filterOptions.name, usersList);
+    //before list is filtered by status
+    filteredList = this.filterUserListByStatus(filterOptions.status, filteredList);
+    //now list is filrted by start and last date
+    filteredList = this.filterUserListByDate(filterOptions.startDate, filterOptions.endDate, filteredList);
+    return filteredList;
 
   }
-  parseDate(user: IUser) {
-    let newDate;
-    const date = this.userList.forEach((user: IUser)=>{
-        newDate =`${user.dataCadastro.substring(8,10)}/${user.dataCadastro.substring(5,7)}/${user.dataCadastro.substring(0,4)}`;
-    });
-    console.log(newDate);
-  }
-  filterUser(filterKey: IFilterOptions){
+  filterUserListByDate(startDate: Date | undefined, endDate: Date | undefined, usersList: IUser[]): IUser[] {
+    const DATE_IS_NOT_SELECTED = startDate === undefined || endDate === undefined;
 
-     this.userList.filter((user: IUser)=>{
-      this.parseDate(user);
-      const EXISTS_NAME_USER = user.nome === filterKey.name;
-      const USER_ACTIVE = user.ativo === filterKey.active;
-      if(EXISTS_NAME_USER){
-        this.userList = [user];
-      }
-      if(USER_ACTIVE){
-        this.userList = [user];
-      }
-      else{
-        return;
-      }
+    if(DATE_IS_NOT_SELECTED){
+      return usersList;
+    }
+    const checkDateInterval = (user: IUser)=> isWithinInterval(new Date(user.dataCadastro), {
+      start: startDate as Date,
+      end: endDate as Date,
     })
+    const filteredList = usersList.filter(checkDateInterval);
+    return filteredList;
+  }
+  filterUserListByStatus(status: boolean | undefined, usersList: IUser[]): IUser[] {
+    const STATUS_NOT_SELECTED = status === undefined;
+    if(STATUS_NOT_SELECTED){
+      return usersList
+    }
+    const filteredList = usersList.filter((user: IUser)=> user.ativo === status);
+    return filteredList;
+  }
+
+   filterUserListByName(name: string | undefined, usersList: IUser[]){
+    const NAME_NOT_TYPED = name === undefined;
+    if(NAME_NOT_TYPED){
+      return usersList;
+    }
+    const filteredList = usersList.filter((user: IUser)=>user.nome.toLowerCase().includes(name.toLowerCase()));
+    console.log(filteredList);
+    return filteredList;
   }
 }

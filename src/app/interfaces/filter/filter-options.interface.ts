@@ -1,6 +1,6 @@
 export interface IFilterOptions{
-  name: string;
-  startDate: Date;
-  endDate: Date;
-  active: boolean;
+  name: string | undefined;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  status: boolean | undefined;
 }

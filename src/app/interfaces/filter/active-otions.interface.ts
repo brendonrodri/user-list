@@ -1,4 +1,4 @@
-export interface IActiveOptions{
+export interface IStatusOption{
   value: boolean;
-  viewValue: string;
+  description: string;
 }
