@@ -1,17 +1,17 @@
 <div class="filter">
-  <form class="form">
+  <div class="form">
     <div class="form__name">
       <mat-form-field class="example-full-width">
         <mat-label>Name</mat-label>
-        <input matInput placeholder="Ex. Um nome" value="Nome">
+        <input matInput placeholder="Ex. Um nome" [(ngModel)]="filterOptions.name">
       </mat-form-field>
     </div>
     <div class="form__date-picker">
       <mat-form-field>
         <mat-label>Data de Cadastro</mat-label>
         <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate placeholder="Start date">
-          <input matEndDate placeholder="End date">
+          <input matStartDate placeholder="Start date" [(ngModel)]="filterOptions.startDate">
+          <input matEndDate placeholder="End date" [(ngModel)]="filterOptions.endDate">
         </mat-date-range-input>
         <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -20,16 +20,16 @@
     </div>
     <div class="form__select">
       <mat-form-field>
-        <mat-label>Favorite food</mat-label>
+        <mat-label>Ativo</mat-label>
         <mat-select>
-          <mat-option *ngFor="let food of foods" [value]="food.value">
-            {{food.viewValue}}
-          </mat-option>
+          <!-- <mat-option *ngFor="let activeOption of activeOptions" [formControl]="selectControl">
+            {{activeOption.viewValue}}
+          </mat-option> -->
         </mat-select>
       </mat-form-field>
     </div>
     <div class="form__button">
-      <button mat-raised-button color="primary">Primary</button>
+      <button mat-raised-button color="primary" (click)="getFilterOptions()">Primary</button>
     </div>
-  </form>
+  </div>
 </div>
